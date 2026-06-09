@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client"
 import "./index.css"
 import App from "./App.tsx"
 import ErrorBoundary from "./components/ErrorBoundary.tsx"
+import { ThemeProvider } from "./ThemeProvider.tsx"
 
 
 document.documentElement.classList.add("dark")
@@ -10,7 +11,9 @@ document.documentElement.classList.add("dark")
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ErrorBoundary>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>
 )

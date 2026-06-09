@@ -32,7 +32,7 @@ function StatCard({
       <div className="relative z-10 flex h-full flex-col justify-between">
         
         {/* Title: Clean, muted lowercase or tracking */}
-        <div className="text-xs font-medium tracking-wider text-zinc-500 transition-colors duration-300 group-hover:text-zinc-400">
+        <div className="text-md font-medium tracking-wider text-zinc-500 transition-colors duration-300 group-hover:text-zinc-400">
           {title}
         </div>
 
@@ -67,12 +67,24 @@ export default function Dashboard() {
   return (
     <div className="space-y-8 p-4 sm:p-8">
       {/* Header */}
+      <Card className="border-0 bg-gradient-to-r from-primary/10 via-primary/5 to-background">
+  <CardContent className="p-6">
+    <div className="flex items-center justify-between">
       <div>
-        <h2 className="text-3xl font-bold tracking-tight text-foreground">Dashboard</h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          Overview of your inventory and sales
+        <h1 className="text-3xl font-bold">
+          Welcome back 👋
+        </h1>
+        <p className="text-muted-foreground mt-1">
+          Here's what's happening with your inventory today.
         </p>
       </div>
+
+      <Badge variant="outline">
+        Live Data
+      </Badge>
+    </div>
+  </CardContent>
+</Card>
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">

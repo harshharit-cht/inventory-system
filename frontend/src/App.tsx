@@ -22,7 +22,8 @@ export default function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      <Toaster />
+      {/* Adding richColors prop makes your toast notifications fit the premium theme instantly */}
+      <Toaster richColors position="top-right" /> 
     </QueryClientProvider>
   )
 }
