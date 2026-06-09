@@ -12,7 +12,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (!error.response) {
-      toast.error("Network error — is the backend running?")
+      toast.error("Something went wrong !")
     } else if (error.response.status === 500) {
       toast.error("Server error — please try again")
     }

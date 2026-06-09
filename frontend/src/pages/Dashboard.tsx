@@ -111,7 +111,7 @@ export default function Dashboard() {
         />
         <StatCard
           title="Total Revenue"
-          value={`$${(stats?.total_revenue ?? 0).toFixed(2)}`}
+          value={`₹${(stats?.total_revenue ?? 0).toFixed(2)}`}
           icon={DollarSign}
           iconColor="text-rose-500 dark:text-rose-400"
           loading={statsLoading}
@@ -184,7 +184,7 @@ export default function Dashboard() {
                       </p>
                     </div>
                     <span className="text-sm font-medium text-foreground">
-                      ${o.total_amount.toFixed(2)}
+                      ₹{o.total_amount.toFixed(2)}
                     </span>
                   </div>
                 ))}

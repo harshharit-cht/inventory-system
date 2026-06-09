@@ -9,13 +9,21 @@ import type { Product } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Plus, Pencil, Trash2, PackageSearch } from "lucide-react"
+import { cn } from "@/lib/utils"
 import axios from "axios"
 
 const schema = z.object({
@@ -42,30 +50,30 @@ function ProductForm({
   })
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 pt-2">
       <div className="space-y-2">
-        <Label>Name</Label>
+        <Label className="text-[13px] font-medium text-foreground">Name</Label>
         <Input {...register("name")} placeholder="Product name" className="bg-background" />
-        {errors.name && <p className="text-xs font-medium text-destructive">{errors.name.message}</p>}
+        {errors.name && <p className="text-[12px] font-medium text-destructive">{errors.name.message}</p>}
       </div>
       <div className="space-y-2">
-        <Label>SKU</Label>
-        <Input {...register("sku")} placeholder="e.g. LAP-001" className="bg-background" />
-        {errors.sku && <p className="text-xs font-medium text-destructive">{errors.sku.message}</p>}
+        <Label className="text-[13px] font-medium text-foreground">SKU</Label>
+        <Input {...register("sku")} placeholder="e.g. LAP-001" className="bg-background font-mono text-[13px]" />
+        {errors.sku && <p className="text-[12px] font-medium text-destructive">{errors.sku.message}</p>}
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>Price ($)</Label>
+          <Label className="text-[13px] font-medium text-foreground">Price (₹)</Label>
           <Input {...register("price")} type="number" step="0.01" placeholder="0.00" className="bg-background" />
-          {errors.price && <p className="text-xs font-medium text-destructive">{errors.price.message}</p>}
+          {errors.price && <p className="text-[12px] font-medium text-destructive">{errors.price.message}</p>}
         </div>
         <div className="space-y-2">
-          <Label>Quantity</Label>
+          <Label className="text-[13px] font-medium text-foreground">Quantity</Label>
           <Input {...register("quantity")} type="number" placeholder="0" className="bg-background" />
-          {errors.quantity && <p className="text-xs font-medium text-destructive">{errors.quantity.message}</p>}
+          {errors.quantity && <p className="text-[12px] font-medium text-destructive">{errors.quantity.message}</p>}
         </div>
       </div>
-      <Button type="submit" className="w-full mt-2" disabled={loading}>
+      <Button type="submit" className="w-full mt-4" disabled={loading}>
         {loading ? "Saving..." : "Save Product"}
       </Button>
     </form>
@@ -118,12 +126,14 @@ export default function Products() {
   })
 
   return (
-    <div className="space-y-8 p-4 sm:p-8">
+    <div className="space-y-8 p-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">Products</h2>
-          <p className="text-sm text-muted-foreground mt-1">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-[36px] font-medium tracking-[-0.02em] text-foreground leading-tight">
+            Products
+          </h2>
+          <p className="text-[16px] text-muted-foreground font-normal">
             Manage your inventory ({products.length} total)
           </p>
         </div>
@@ -136,7 +146,7 @@ export default function Products() {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Add New Product</DialogTitle>
+              <DialogTitle className="text-[18px] font-medium tracking-tight">Add New Product</DialogTitle>
             </DialogHeader>
             <ProductForm onSubmit={createMutation.mutate} loading={createMutation.isPending} />
           </DialogContent>
@@ -144,94 +154,118 @@ export default function Products() {
       </div>
 
       {/* Content */}
-      {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <Card key={i} className="dark:border-border/50">
-              <CardHeader className="pb-2">
-                <Skeleton className="h-5 w-2/3" />
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                </div>
-                <div className="flex gap-2 pt-2">
-                  <Skeleton className="h-9 w-full" />
-                  <Skeleton className="h-9 w-full" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : products.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 px-4 border border-dashed border-border rounded-xl bg-card/50">
-          <div className="p-4 rounded-full bg-muted/50 mb-4">
-            <PackageSearch className="h-8 w-8 text-muted-foreground" />
-          </div>
-          <h3 className="text-lg font-semibold text-foreground mb-1">No products found</h3>
-          <p className="text-sm text-muted-foreground text-center max-w-sm">
-            You haven't added any products to your inventory yet. Click the button above to get started.
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {products.map((product) => (
-            <Card key={product.id} className="transition-all hover:shadow-md dark:hover:shadow-none dark:border-border/50 flex flex-col">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between gap-4">
-                  <CardTitle className="text-base font-semibold leading-tight text-foreground line-clamp-2">
+      <div className="rounded-[12px] border border-border bg-card overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.02)] dark:shadow-none">
+        <Table>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent border-b border-border bg-muted/20">
+              <TableHead className="w-[40%] text-[13px] font-medium text-muted-foreground h-11">Product</TableHead>
+              <TableHead className="text-[13px] font-medium text-muted-foreground h-11">SKU</TableHead>
+              <TableHead className="text-[13px] font-medium text-muted-foreground h-11">Price</TableHead>
+              <TableHead className="text-[13px] font-medium text-muted-foreground h-11">Stock</TableHead>
+              <TableHead className="text-right text-[13px] font-medium text-muted-foreground h-11">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              // Loading Skeleton Rows
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i} className="border-b border-border">
+                  <TableCell><Skeleton className="h-5 w-3/4 rounded-md" /></TableCell>
+                  <TableCell><Skeleton className="h-5 w-24 rounded-md" /></TableCell>
+                  <TableCell><Skeleton className="h-5 w-16 rounded-md" /></TableCell>
+                  <TableCell><Skeleton className="h-5 w-20 rounded-md" /></TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Skeleton className="h-8 w-16 rounded-md" />
+                      <Skeleton className="h-8 w-16 rounded-md" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : products.length === 0 ? (
+              // Empty State
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={5} className="h-64 text-center">
+                  <div className="flex flex-col items-center justify-center p-6 text-center">
+                    <div className="p-3 rounded-full bg-muted/50 mb-4 border border-border/50">
+                      <PackageSearch className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-[15px] font-medium text-foreground mb-1">No products found</h3>
+                    <p className="text-[14px] text-muted-foreground max-w-sm">
+                      You haven't added any products to your inventory yet.
+                    </p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              // Product Rows
+              products.map((product) => (
+                <TableRow key={product.id} className="border-b border-border transition-colors hover:bg-muted/30">
+                  <TableCell className="font-medium text-[14px] text-foreground">
                     {product.name}
-                  </CardTitle>
-                  <Badge variant="outline" className="text-xs font-mono shrink-0 bg-background">
-                    {product.sku}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4 flex-1 flex flex-col justify-end">
-                <div className="space-y-2 bg-muted/30 p-3 rounded-lg border border-border/50">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Price</span>
-                    <span className="font-semibold text-foreground">${product.price.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Stock</span>
-                    <Badge variant={product.quantity === 0 ? "destructive" : product.quantity <= 5 ? "outline" : "secondary"}>
-                      {product.quantity} units
+                  </TableCell>
+                  <TableCell>
+                    <span className="font-mono text-[13px] text-muted-foreground bg-secondary px-2 py-1 rounded-[4px] border border-border/50">
+                      {product.sku}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-[14px] text-foreground">
+                    ₹{product.price.toFixed(2)}
+                  </TableCell>
+                  <TableCell>
+                    <Badge 
+                      variant="outline" 
+                      className={cn(
+                        "rounded-[4px] shadow-none text-[12px] font-normal border px-2 py-0.5",
+                        product.quantity === 0 
+                          ? "bg-destructive/10 text-destructive border-destructive/20" 
+                          : product.quantity <= 5 
+                            ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                            : "bg-transparent text-foreground border-border"
+                      )}
+                    >
+                      {product.quantity === 0 ? "Out of stock" : `${product.quantity} in stock`}
                     </Badge>
-                  </div>
-                </div>
-                <div className="flex gap-2 pt-1">
-                  <Dialog open={editProduct?.id === product.id} onOpenChange={(o) => !o && setEditProduct(null)}>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm" className="flex-1 bg-background hover:bg-muted" onClick={() => setEditProduct(product)}>
-                        <Pencil className="h-3.5 w-3.5 mr-1.5" />Edit
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Dialog open={editProduct?.id === product.id} onOpenChange={(o) => !o && setEditProduct(null)}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-8 px-3 text-[13px] bg-background" onClick={() => setEditProduct(product)}>
+                            <Pencil className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
+                            Edit
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader>
+                            <DialogTitle className="text-[18px] font-medium tracking-tight">Edit Product</DialogTitle>
+                          </DialogHeader>
+                          <ProductForm
+                            defaultValues={product}
+                            onSubmit={(data) => updateMutation.mutate({ id: product.id, data })}
+                            loading={updateMutation.isPending}
+                          />
+                        </DialogContent>
+                      </Dialog>
+                      
+                      <Button
+                        variant="outline" 
+                        size="sm" 
+                        className="h-8 px-3 text-[13px] text-destructive hover:text-destructive hover:bg-destructive/10 border-border"
+                        onClick={() => deleteMutation.mutate(product.id)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                        Delete
                       </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Edit Product</DialogTitle>
-                      </DialogHeader>
-                      <ProductForm
-                        defaultValues={product}
-                        onSubmit={(data) => updateMutation.mutate({ id: product.id, data })}
-                        loading={updateMutation.isPending}
-                      />
-                    </DialogContent>
-                  </Dialog>
-                  <Button
-                    variant="destructive" size="sm" className="flex-1"
-                    onClick={() => deleteMutation.mutate(product.id)}
-                    disabled={deleteMutation.isPending}
-                  >
-                    <Trash2 className="h-3.5 w-3.5 mr-1.5" />Delete
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }

@@ -100,7 +100,7 @@ export default function Customers() {
               </div>
               <div className="space-y-2">
                 <Label>Phone</Label>
-                <Input {...register("phone")} placeholder="+1 234 567 890" className="bg-background" />
+                <Input {...register("phone")} placeholder="+91 98376 54892" className="bg-background" />
                 {errors.phone && <p className="text-xs font-medium text-destructive">{errors.phone.message}</p>}
               </div>
               <Button type="submit" className="w-full mt-2" disabled={createMutation.isPending}>
